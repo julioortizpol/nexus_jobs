@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 //Colors//0xffa6a0f3
-Color grayBackGround = Color(0xffEDF1F7);
+Color grayAppColor = Color(0xffEDF1F7);
 Color txtFieldUnderLineColor = Color.fromARGB(100, 167, 161, 243);
 Color txtFieldContentColor = Color(0xffA7A1F3);
 Color darkBlue = Color(0xff133463);
@@ -47,5 +47,12 @@ InputDecoration loginInputDecoration = InputDecoration(
   ),
   focusedBorder: UnderlineInputBorder(
     borderSide: BorderSide(color: txtFieldUnderLineColor),
+  ),
+);
+
+OutlineInputBorder customOutLineBorderInputRegister = OutlineInputBorder(
+  borderSide: BorderSide(color: grayAppColor),
+  borderRadius: BorderRadius.all(
+    Radius.circular(7.0),
   ),
 );

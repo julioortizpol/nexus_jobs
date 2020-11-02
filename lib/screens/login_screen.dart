@@ -1,18 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:nexus_jobs/utilities/styles.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nexus_jobs/utilities/literals.dart';
+import 'package:nexus_jobs/utilities/styles.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../Models/user.dart';
+import '../components/custom_rounded_button.dart';
+import '../components/social_acces.dart';
+import '../services/services.dart';
+import '../utilities/common_functions.dart';
+import 'register_screen.dart';
 
 class LoginScreen extends StatelessWidget {
+  static String id = "LoginScreen";
   final logoRoute = 'images/logo.png';
-  final gIconRoue = "images/Google.svg";
-  final fbIconRoute = "images/FB.svg";
-  final linkedinIconRoute = "images/Linkedin.svg";
+  final _formKey = GlobalKey<FormState>();
+  final userTextFieldController = TextEditingController();
+  final passwordTextFieldController = TextEditingController();
+
+  getStringValuesSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Return String
+    String stringValue = prefs.getString('accessToken');
+    return stringValue;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
-        color: grayBackGround,
+        color: grayAppColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -26,29 +43,43 @@ class LoginScreen extends StatelessWidget {
                   decoration: customBoxDecoration(10.0, Colors.white),
                   padding:
                       EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        userLiterals,
-                        style: txtFieldLabels,
-                      ),
-                      SizedBox(height: 2),
-                      TextField(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          userLiterals,
+                          style: txtFieldLabels,
+                        ),
+                        SizedBox(height: 2),
+                        TextFormField(
                           style: txtFieldContent,
                           cursorColor: txtFieldContentColor,
-                          decoration: loginInputDecoration),
-                      SizedBox(height: 15),
-                      Text(
-                        passwordLiterals,
-                        style: txtFieldLabels,
-                      ),
-                      SizedBox(height: 2),
-                      TextField(
+                          decoration: loginInputDecoration,
+                          controller: userTextFieldController,
+                          validator: (value) {
+                            return emptyFieldValidationFunction(value);
+                          },
+                        ),
+                        SizedBox(height: 15),
+                        Text(
+                          passwordLiterals,
+                          style: txtFieldLabels,
+                        ),
+                        SizedBox(height: 2),
+                        TextFormField(
+                          validator: (value) {
+                            return emptyFieldValidationFunction(value);
+                          },
+                          obscureText: true,
                           style: txtFieldContent,
                           cursorColor: txtFieldContentColor,
-                          decoration: loginInputDecoration)
-                    ],
+                          decoration: loginInputDecoration,
+                          controller: passwordTextFieldController,
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -61,131 +92,32 @@ class LoginScreen extends StatelessWidget {
                       forgotPasswordLiterals,
                       style: forgotPassWordButton,
                     ),
-                    onPressed: () {},
+                    onPressed: () async {},
                   ),
                 ),
               ),
             ]),
             Column(children: [
-              Padding(
-                padding: EdgeInsets.only(right: 20, left: 20),
-                child: FlatButton(
-                    onPressed: () {},
-                    child: Container(
-                        width: double.infinity,
-                        height: 48,
-                        child: Center(
-                            child: Text(
-                          signInLiterals,
-                          style: loginButtonLabel,
-                        ))),
-                    color: mainColor,
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(12.0))),
+              CustomRoundedButton(
+                action: () async {
+                  if (_formKey.currentState.validate()) {
+                    await login(
+                        User(
+                            username: userTextFieldController.text,
+                            password: passwordTextFieldController.text),
+                        context);
+                  }
+                },
+                color: mainColor,
+                text: signInLiterals,
               ),
-              Padding(
-                padding: EdgeInsets.only(right: 20, left: 20, top: 10),
-                child: FlatButton(
-                    onPressed: () {},
-                    child: Container(
-                        width: double.infinity,
-                        height: 48,
-                        child: Center(
-                            child: Text(
-                          registerLiterals,
-                          style: TextStyle(
-                              color: Color(0xffFCFCFC),
-                              fontFamily: 'NotoSans',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ))),
-                    color: darkBlue,
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(12.0))),
+              CustomRoundedButton(
+                action: () => Navigator.pushNamed(context, RegisterScreen.id),
+                color: darkBlue,
+                text: registerLiterals,
               ),
             ]),
-            Container(
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        color: darkGray,
-                        height: 2,
-                        width: 72,
-                      ),
-                      Text(
-                        signInWith,
-                        style: TextStyle(
-                            color: darkBlue,
-                            fontFamily: 'NotoSans',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15),
-                      ),
-                      Container(
-                        color: darkGray,
-                        height: 2,
-                        width: 72,
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: Colors.white,
-                          ),
-                          borderRadius: BorderRadius.circular(7.0),
-                        ),
-                        height: 42,
-                        width: 42,
-                        child: SvgPicture.asset(
-                          gIconRoue,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: Colors.white,
-                          ),
-                          borderRadius: BorderRadius.circular(7.0),
-                        ),
-                        height: 42,
-                        width: 42,
-                        child: SvgPicture.asset(
-                          fbIconRoute,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: Colors.white,
-                          ),
-                          borderRadius: BorderRadius.circular(7.0),
-                        ),
-                        height: 42,
-                        width: 42,
-                        child: SvgPicture.asset(
-                          linkedinIconRoute,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            )
+            SocialAccess(darkBlue)
           ],
         ),
       ),

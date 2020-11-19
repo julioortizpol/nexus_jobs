@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Models/job.dart';
 import '../Models/user.dart';
 
 Future<void> _showMyDialog(List messages, context) async {
@@ -47,6 +48,13 @@ addStringToSF(key, value) async {
   prefs.setString(key, value);
 }
 
+getStringValuesSF(key) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  //Return String
+  String stringValue = prefs.getString(key);
+  return stringValue;
+}
+
 createUser(User user, context) async {
   String url =
       'http://newnexusvacantsapp-env.eba-ismjscyn.us-east-2.elasticbeanstalk.com/auth/signup';
@@ -66,9 +74,11 @@ login(User user, context) async {
   Response response = await httpPostUser(user, url);
   if (response.statusCode == 201) {
     addStringToSF('accessToken', jsonDecode(response.body)['accessToken']);
+    return true;
     //return "User Loged";
   } else {
     _showMyDialog(jsonDecode(response.body)['message'], context);
+    return false;
     //return jsonDecode(response.body)['message'];
   }
 }
@@ -87,4 +97,29 @@ Future<Response> httpPostUser(User user, String url) {
       'gender': user.gender,
     }),
   );
+}
+
+Future fetchJobs() async {
+  final response = await get(
+      'http://newnexusvacantsapp-env.eba-ismjscyn.us-east-2.elasticbeanstalk.com/jobs',
+      headers: <String, String>{
+        'Authorization': "Bearer ${await getStringValuesSF('accessToken')}",
+      });
+  if (response.statusCode == 200) {
+    return (jsonDecode(response.body));
+  } else {
+    return null;
+  }
+}
+
+getJobsList(context) async {
+  dynamic jobsList = await fetchJobs();
+  if (jobsList != null) {
+    return List.generate(
+        jobsList.length, (index) => Job.fromJson(jobsList[index]));
+  } else {
+    _showMyDialog(["Error Al obtener la data"], context);
+    Navigator.pop(context);
+    //Context is kill after dialog
+  }
 }

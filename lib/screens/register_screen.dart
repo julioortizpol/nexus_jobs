@@ -10,15 +10,40 @@ import '../components/custom_rounded_text_field.dart';
 import '../components/social_acces.dart';
 import '../services/services.dart';
 import '../utilities/common_functions.dart';
+import 'gender_options.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   static String id = "RegisterScreen";
+
+  @override
+  _RegisterScreenState createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
+
   final nameTextFieldController = TextEditingController();
+
   final emailTextFieldController = TextEditingController();
+
   final userTextFieldController = TextEditingController();
+
   final passwordTextFieldController = TextEditingController();
-  final sexTextFieldController = TextEditingController();
+
+  String secOption = "Sexo";
+
+  _navigateAndDisplaySelection(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SexOptionsScreen()),
+    );
+
+    // After the Selection Screen returns a result, hide any previous snackbars
+    // and show the new result.
+    setState(() {
+      secOption = result;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +111,7 @@ class RegisterScreen extends StatelessWidget {
                                 EdgeInsets.only(right: 16, left: 16, top: 20),
                             child: FlatButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, SexOptionsScreen.id);
+                                  _navigateAndDisplaySelection(context);
                                 },
                                 child: Container(
                                     width: double.infinity,
@@ -99,7 +123,7 @@ class RegisterScreen extends StatelessWidget {
                                         Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
-                                            "Sexo",
+                                            secOption,
                                             style: txtFieldContent,
                                             textAlign: TextAlign.start,
                                           ),
@@ -129,7 +153,7 @@ class RegisterScreen extends StatelessWidget {
                                 username: userTextFieldController.text,
                                 password: passwordTextFieldController.text,
                                 email: emailTextFieldController.text,
-                                gender: "M",
+                                gender: secOption,
                               ),
                               context);
                           if (!(response is List)) {

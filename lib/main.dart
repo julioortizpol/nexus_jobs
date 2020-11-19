@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:nexus_jobs/screens/gender_options.dart';
+
+import 'screens/gender_options.dart';
+import 'screens/job_details_screen.dart';
+import 'screens/jobs_list.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
-import 'screens/gender_options.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,6 +21,8 @@ class MyApp extends StatelessWidget {
         LoginScreen.id: (context) => LoginScreen(),
         RegisterScreen.id: (context) => RegisterScreen(),
         SexOptionsScreen.id: (context) => SexOptionsScreen(),
+        JobsListScreen.id: (context) => JobsListScreen(),
+        JobsDetailsScreen.id: (context) => JobsDetailsScreen(),
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,

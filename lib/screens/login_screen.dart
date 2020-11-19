@@ -8,6 +8,7 @@ import '../components/custom_rounded_button.dart';
 import '../components/social_acces.dart';
 import '../services/services.dart';
 import '../utilities/common_functions.dart';
+import 'jobs_list.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -26,15 +27,20 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double logoSize = MediaQuery.of(context).size.height * 0.3;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
         color: grayAppColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.max,
           children: [
-            Container(
-              child: Image.asset(logoRoute, height: 200, width: 200),
+            Center(
+              child: Container(
+                child:
+                    Image.asset(logoRoute, height: logoSize, width: logoSize),
+              ),
             ), //Logo
             Column(children: [
               Padding(
@@ -52,7 +58,6 @@ class LoginScreen extends StatelessWidget {
                           userLiterals,
                           style: txtFieldLabels,
                         ),
-                        SizedBox(height: 2),
                         TextFormField(
                           style: txtFieldContent,
                           cursorColor: txtFieldContentColor,
@@ -67,7 +72,6 @@ class LoginScreen extends StatelessWidget {
                           passwordLiterals,
                           style: txtFieldLabels,
                         ),
-                        SizedBox(height: 2),
                         TextFormField(
                           validator: (value) {
                             return emptyFieldValidationFunction(value);
@@ -101,11 +105,14 @@ class LoginScreen extends StatelessWidget {
               CustomRoundedButton(
                 action: () async {
                   if (_formKey.currentState.validate()) {
-                    await login(
+                    bool logonSuccess = await login(
                         User(
                             username: userTextFieldController.text,
                             password: passwordTextFieldController.text),
                         context);
+                    if (logonSuccess) {
+                      Navigator.pushNamed(context, JobsListScreen.id);
+                    }
                   }
                 },
                 color: mainColor,

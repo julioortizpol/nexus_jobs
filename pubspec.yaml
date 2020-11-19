@@ -16,6 +16,8 @@ dependencies:
   flutter_svg: ^0.19.1
   http: ^0.12.2
   shared_preferences: ^0.5.12+2
+  share: ^0.6.5+4
+  simple_coverflow: ^0.0.8
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -43,6 +45,10 @@ flutter:
     - images/Google.svg
     - images/FB.svg
     - images/Linkedin.svg
+    - images/Iconos_configuracion.svg
+    - images/Iconos_Lista.svg
+    - images/Iconos_Perfil.svg
+    - images/Iconos_compartir.svg
   fonts:
     - family: NotoSans
       fonts:
@@ -56,6 +62,7 @@ flutter:
         - asset: fonts/Nunito-Black.ttf
         - asset: fonts/Nunito-BlackItalic.ttf
         - asset: fonts/Nunito-Bold.ttf
+        - asset: fonts/Nunito-Light.ttf
         - asset: fonts/Nunito-BoldItalic.ttf
         - asset: fonts/Nunito-ExtraBold.ttf
         - asset: fonts/Nunito-Italic.ttf

@@ -25,7 +25,7 @@ class SexOptionsScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(right: 16, left: 16, top: 30),
               child: FlatButton(
-                  onPressed: () {},
+                  onPressed: () => Navigator.pop(context, "M"),
                   child: Container(
                     width: double.infinity,
                     height: 46,
@@ -45,7 +45,7 @@ class SexOptionsScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(right: 16, left: 16, top: 20),
               child: FlatButton(
-                  onPressed: () {},
+                  onPressed: () => Navigator.pop(context, "F"),
                   child: Container(
                     width: double.infinity,
                     height: 46,
